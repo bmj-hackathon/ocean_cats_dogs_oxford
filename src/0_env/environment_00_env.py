@@ -21,6 +21,9 @@ handler.setFormatter(formatter)
 logger.handlers = [handler]
 logging.info("Logging started")
 
+# %% Paths
+
+
 #%%
 import warnings
 import gc

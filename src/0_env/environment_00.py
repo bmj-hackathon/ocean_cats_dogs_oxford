@@ -28,6 +28,10 @@ warnings.simplefilter("ignore", category=DeprecationWarning)
 
 from pathlib import Path
 
+#%% Standard imports
+import os
+from pathlib import Path
+
 #%%
 # Scientific stack
 import numpy as np
@@ -36,15 +40,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.image as mplimg
 from matplotlib.pyplot import imshow
-import sklearn.preprocessing
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.preprocessing import OneHotEncoder
-# import sklearn.preprocessing
-import sklearn.model_selection
 import sklearn as sk
 
 import h5py
-
 
 logging.info("{:>10}=={} as {}".format('numpy', np.__version__, 'np'))
 logging.info("{:>10}=={} as {}".format('pandas', pd.__version__, 'pd'))
@@ -52,6 +50,8 @@ logging.info("{:>10}=={} as {}".format('sklearn', sk.__version__, 'sk'))
 logging.info("{:>10}=={} as {}".format('matplotlib', mpl.__version__, 'mpl'))
 
 # %%
+assert "LD_LIBRARY_PATH" in os.environ
+assert "/usr/local/cuda-9.0/bin" in [p for p in os.environ['PATH'].split(':')]
 # Deep learning stack
 import tensorflow as tf
 
@@ -69,24 +69,3 @@ import tensorflow as tf
 # import tensorflow.keras.backend as K
 # from tensorflow.keras.models import Sequential
 
-#%%
-import kaggle_utils
-from kaggle_utils.util_keras_tensorflow import get_available_gpus, assert_cuda_paths
-
-assert_cuda_paths()
-
-# Ensure CUDA paths!
-import os
-from pathlib import Path
-assert "LD_LIBRARY_PATH" in os.environ
-assert "/usr/local/cuda-9.0/bin" in [p for p in os.environ['PATH'].split(':')]
-
-#%%
-
-def mm2inch(value):
-    return value/25.4
-PAPER = {
-    "A3_LANDSCAPE" : (mm2inch(420),mm2inch(297)),
-    "A4_LANDSCAPE" : (mm2inch(297),mm2inch(210)),
-    "A5_LANDSCAPE" : (mm2inch(210),mm2inch(148)),
-}

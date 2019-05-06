@@ -24,18 +24,18 @@ logging.info("Logging started")
 # %% Paths
 
 
-#%%
+# %%
 import warnings
 import gc
 warnings.simplefilter("ignore", category=DeprecationWarning)
 
 from pathlib import Path
 
-#%% Standard imports
+# %% Standard imports
 import os
 from pathlib import Path
 
-#%%
+# %%
 # Scientific stack
 import numpy as np
 import pandas as pd
@@ -57,6 +57,7 @@ assert "LD_LIBRARY_PATH" in os.environ
 assert "/usr/local/cuda-9.0/bin" in [p for p in os.environ['PATH'].split(':')]
 # Deep learning stack
 import tensorflow as tf
+logging.info("{:>10}=={} as {}".format('tensorflow', tf.__version__, 'tf'))
 
 # from tensorflow.keras import layers
 # from tensorflow.keras.preprocessing import image

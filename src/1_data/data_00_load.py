@@ -15,3 +15,8 @@ logging.info("Data path {}".format(PATH_DATA_ROOT))
 logging.info(f"Loading files into memory")
 
 
+path_labels = PATH_DATA_ROOT / "annotations" / "list.txt"
+assert path_labels.exists()
+
+df = pd.read_csv(path_labels, header=6, delim_whitespace=True)
+df.columns = ['file name','class ID','species ID', 'breed ID']

@@ -22,7 +22,9 @@ logger.handlers = [handler]
 logging.info("Logging started")
 
 # %% Paths
-
+from pathlib import Path
+PATH_DATA_ROOT = Path.cwd() / "data"
+assert PATH_DATA_ROOT.exists()
 
 # %%
 import warnings

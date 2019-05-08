@@ -43,6 +43,10 @@ class AIDataSet():
 
         logging.info("{} images found".format(len(self.list_images())))
         logging.info("Dataframe with {} records, target column is {}".format(len(df), self.col_target))
+        logging.info("{} classes".format(len(self.df[self.col_target].value_counts())))
+        logging.info("Classes counts: {}".format(list(self.df[self.col_target].value_counts().iteritems())))
+
+
         self.check_alignment(strict=False)
     def list_images(self):
         image_list = self.image_folder.glob("*"+self.image_extension)
@@ -64,8 +68,6 @@ class AIDataSet():
 
 # %%
 image_folder = path_data / "images"
-ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'class')
+ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'species')
 df.head()
-df[col_target].value_counts()
-df.groupby(col_target)[].nunique()
 

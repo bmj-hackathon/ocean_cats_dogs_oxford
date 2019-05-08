@@ -37,17 +37,29 @@ class AIDataSet():
         self.col_file = col_file
         self.target_col = col_target
 
-        logging.debug("{} images found".format(len(self.list_images())))
+        logging.info("{} images found".format(len(self.list_images())))
         logging.info("Dataframe with {} records, target column is {}".format(len(df), self.target_col))
-
+        self.check_alignment(strict=False)
     def list_images(self):
         image_list = self.image_folder.glob("*"+self.image_extension)
         return list(image_list)
 
+    def check_alignment(self, strict):
+
+        # Get the file names from the image folder
+        image_names = [p.stem for p in self.list_images()]
+        # Compare the number of images in the dataframe to the images in folder
+        extra_df_records = self.df[self.df['file name'].isin(image_names) == False]
+        logging.info("{} extra images in the dataframe".format(len(extra_df_records)))
+
+        # Compare the number of images in the folder to the dataframe labels
+        extra_folder_images = pd.Series(image_names)[pd.Series(image_names).isin(df['file name']) == False]
+        logging.info("{} extra images found in the folder".format(len(extra_folder_images)))
+        if strict:
+            assert extra_df_records == 0
+            assert extra_folder_images == 0
+
 # %%
 image_folder = path_data / "images"
-ds = AIDataSet(image_folder, ".jpg", df, 'class')
-res = ds.list_images()
+ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'class')
 
-
-image_folder.glob("*."+self.image_extension)

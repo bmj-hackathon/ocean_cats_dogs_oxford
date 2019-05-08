@@ -59,7 +59,9 @@ assert "LD_LIBRARY_PATH" in os.environ
 assert "/usr/local/cuda-9.0/bin" in [p for p in os.environ['PATH'].split(':')]
 # Deep learning stack
 import tensorflow as tf
+import tensorflow.keras as ks
 logging.info("{:>10}=={} as {}".format('tensorflow', tf.__version__, 'tf'))
+logging.info("{:>10}=={} as {}".format('keras', ks.__version__, 'ks'))
 
 # from tensorflow.keras import layers
 # from tensorflow.keras.preprocessing import image

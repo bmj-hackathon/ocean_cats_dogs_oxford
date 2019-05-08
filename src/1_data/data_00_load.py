@@ -35,17 +35,16 @@ class AIDataSet():
         self.image_extension = image_extension
         self.df = df
         self.col_file = col_file
-        self.target_col = col_target
+        self.col_target = col_target
 
         logging.info("{} images found".format(len(self.list_images())))
-        logging.info("Dataframe with {} records, target column is {}".format(len(df), self.target_col))
+        logging.info("Dataframe with {} records, target column is {}".format(len(df), self.col_target))
         self.check_alignment(strict=False)
     def list_images(self):
         image_list = self.image_folder.glob("*"+self.image_extension)
         return list(image_list)
 
     def check_alignment(self, strict):
-
         # Get the file names from the image folder
         image_names = [p.stem for p in self.list_images()]
         # Compare the number of images in the dataframe to the images in folder
@@ -62,4 +61,7 @@ class AIDataSet():
 # %%
 image_folder = path_data / "images"
 ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'class')
+df.head()
+col_target = 'species'
+df.groupby(col_target).count()
 

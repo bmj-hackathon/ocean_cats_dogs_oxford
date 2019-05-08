@@ -22,10 +22,13 @@ df = pd.read_csv(path_labels, header=6, delim_whitespace=True)
 df.columns = ['file name', 'class', 'species', 'breed']
 df['species'] = df['species'].astype('category')
 df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
-df['species'] = df['species'].astype('category')
-df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
-df['species'] = df['species'].astype('category')
-df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
+
+def split_breed(x):
+    breed_strings = x.split('_')
+    breed_strings.pop()
+    return " ".join(breed_strings)
+df['breed string'] = df['file name'].apply(split_breed)
+
 df.head()
 df['species'].cat.codes
 
@@ -94,7 +97,7 @@ plot_indices = df.sample(NUM_IMAGES)['file name'].values
 for i in range(NUM_IMAGES):
     record = df.sample(1)
     file_stem = record['file name']
-    label = record['species']
+    label = '\n'.join([record['species'].values, record['breed string']])
     ax = fig.add_subplot(ROWS, COLS, i + 1)
 
     selected_image_path = list(image_folder.glob(file_stem + image_extension))

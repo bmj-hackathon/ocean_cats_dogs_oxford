@@ -22,6 +22,10 @@ df = pd.read_csv(path_labels, header=6, delim_whitespace=True)
 df.columns = ['file name', 'class', 'species', 'breed']
 df['species'] = df['species'].astype('category')
 df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
+df['species'] = df['species'].astype('category')
+df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
+df['species'] = df['species'].astype('category')
+df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
 df.head()
 df['species'].cat.codes
 
@@ -66,8 +70,45 @@ class AIDataSet():
             assert extra_df_records == 0
             assert extra_folder_images == 0
 
+class Plotter():
+    def plot12(self, dataset, ts_string_indices, source_jpg_folder='jpg_images', extension='jpg', rows=3, cols=4):
+        pass
+
 # %%
 image_folder = path_data / "images"
-ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'species')
+image_extension = '.jpg'
+ds = AIDataSet(image_folder, image_extension, df, 'file name', 'species')
 df.head()
+# %% Plotting
+ROWS = 3
+COLS = 3
+NUM_IMAGES = ROWS * COLS
+
+# Figure ##############################################################
+# figsize = [width, height]
+fig = plt.figure(figsize=PAPER["A3_LANDSCAPE"], facecolor='white')
+fig.suptitle("Sample images".format(), fontsize=20)
+
+plot_indices = df.sample(NUM_IMAGES)['file name'].values
+
+for i in range(NUM_IMAGES):
+    record = df.sample(1)
+    file_stem = record['file name']
+    label = record['species']
+    ax = fig.add_subplot(ROWS, COLS, i + 1)
+
+    selected_image_path = list(image_folder.glob(file_stem + image_extension))
+    assert len(selected_image_path) == 1
+    selected_image_path = selected_image_path.pop()
+    assert selected_image_path.exists()
+    img = mpl.image.imread(selected_image_path)
+    ax.imshow(img)
+    ax.set_title('Test')
+
+    t = ax.text(5, 25, label, color='black', alpha=1)
+    # t = plt.text(0.5, 0.5, 'text', transform=ax.transAxes, fontsize=30)
+    t.set_bbox(dict(facecolor='white', alpha=0.7, edgecolor='none'))
+    # plt.title(str_label)
+plt.show()
+
 

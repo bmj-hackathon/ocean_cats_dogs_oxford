@@ -20,7 +20,11 @@ assert path_labels.exists()
 
 df = pd.read_csv(path_labels, header=6, delim_whitespace=True)
 df.columns = ['file name', 'class', 'species', 'breed']
+df['species'] = df['species'].astype('category')
+df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
 df.head()
+df['species'].cat.codes
+
 # %%
 class AIDataSet():
     def __init__(self, image_folder, image_extension, df, col_file, col_target):
@@ -62,6 +66,6 @@ class AIDataSet():
 image_folder = path_data / "images"
 ds = AIDataSet(image_folder, ".jpg", df, 'file name', 'class')
 df.head()
-col_target = 'species'
-df.groupby(col_target).count()
+df[col_target].value_counts()
+df.groupby(col_target)[].nunique()
 

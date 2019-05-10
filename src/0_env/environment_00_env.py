@@ -37,6 +37,8 @@ from pathlib import Path
 import os
 from pathlib import Path
 import functools
+import xml.etree.ElementTree as etree
+import xmltodict
 # %%
 # Scientific stack
 import numpy as np

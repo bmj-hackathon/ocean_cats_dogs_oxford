@@ -14,7 +14,6 @@ logging.info("Data path {}".format(PATH_DATA_ROOT))
 # =============================================================================
 logging.info(f"Loading files into memory")
 
-
 path_labels = path_data / "annotations" / "list.txt"
 assert path_labels.exists()
 
@@ -60,11 +59,54 @@ df['path_trimap'] = df['image file name'].apply(file_path_parameterized)
 assert df['path_trimap'][0].exists()
 
 # Check paths
-assert df['path_xml'].apply(assert_path_exists).all()
-assert df['path_image'].apply(assert_path_exists).all()
-assert df['path_xml'][0].exists()
+# assert df['path_xml'].apply(assert_path_exists).all()
+# assert df['path_image'].apply(assert_path_exists).all()
+# assert df['path_xml'][0].exists()
 
+#%% XML expansion
 
+# Load XML to dictionary
+def load_xml(x):
+    # print(x)
+    if x.exists():
+        with open(x) as fd:
+            doc = xmltodict.parse(fd.read())
+        return doc
+    else:
+        return 0
+assert df['path_trimap'][0].exists()
+# file_path_parameterized = functools.partial(file_path, path_data=path_trimap, file_pattern='._{}.png')
+df['xml_dict'] = df['path_xml'].apply(load_xml)
+
+#%%
+# Expand dictionary to columns
+def collect_annotations(x):
+    if x:
+        try:
+            x['image_width'] = x['annotation']['size']['width']
+            x['image_height'] = x['annotation']['size']['height']
+            x['image_pose'] = x['annotation']['object']['pose']
+            x['image_truncated'] = x['annotation']['object']['truncated']
+            x['image_occluded'] = x['annotation']['object']['occluded']
+            x['image_difficult'] = x['annotation']['object']['difficult']
+            x['image_bounding_box'] = x['annotation']['object']['bndbox']
+            return x
+        except:
+            return 0
+    else:
+        return 0
+
+# df2 = df['xml_dict'].apply(collect_annotations, result_type='expand')
+applied_df = df.apply(lambda row: collect_annotations(row['xml_dict']), axis='columns', result_type='expand')
+
+#
+# df['image_size'] = df['xml_dict'].apply(lambda x: x['annotation']['size'] if x)
+# df['image_height'] = df['xml_dict'][0]['annotation']['size']['height']
+# df[]
+# ('size',
+#  OrderedDict([('width', '450'),
+#               ('height', '313'),
+#               ('depth', '3')])),
 # %%
 class AIDataSet():
     def __init__(self, image_folder, image_extension, df, col_file, col_target):

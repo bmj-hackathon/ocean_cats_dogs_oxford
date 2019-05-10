@@ -36,7 +36,7 @@ from pathlib import Path
 # %% Standard imports
 import os
 from pathlib import Path
-
+import functools
 # %%
 # Scientific stack
 import numpy as np

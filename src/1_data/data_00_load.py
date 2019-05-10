@@ -15,22 +15,40 @@ logging.info("Data path {}".format(PATH_DATA_ROOT))
 logging.info(f"Loading files into memory")
 
 
-path_labels = PATH_DATA_ROOT / "annotations" / "list.txt"
+path_labels = path_data / "annotations" / "list.txt"
 assert path_labels.exists()
 
 df = pd.read_csv(path_labels, header=6, delim_whitespace=True)
-df.columns = ['file name', 'class', 'species', 'breed']
+df.columns = ['image file name', 'class', 'species', 'breed']
 df['species'] = df['species'].astype('category')
 df['species'].cat.rename_categories({1:'Cat', 2:'Dog'}, inplace=True)
 
+# Get the breed of the animal from the file name
 def split_breed(x):
     breed_strings = x.split('_')
     breed_strings.pop()
     return " ".join(breed_strings)
-df['breed string'] = df['file name'].apply(split_breed)
 
-df.head()
-df['species'].cat.codes
+df['breed string'] = df['image file name'].apply(split_breed)
+
+# Define the full file path for the images
+def file_path(x, path_data, extension):
+    filename = x + extension
+    return path_data / filename
+
+file_path_parameterized = functools.partial(file_path, path_data=path_data/'images', extension='.jpg')
+df['path_image'] = df['image file name'].apply(file_path_parameterized)
+df['path_image'][0]
+
+def assert_path_exists(x):
+    return x.exists()
+assert df['path_image'].apply(assert_path_exists).all()
+
+# Define the xml path
+path_xml = path_data / 'annotations' / 'xmls'
+
+
+
 
 # %%
 class AIDataSet():

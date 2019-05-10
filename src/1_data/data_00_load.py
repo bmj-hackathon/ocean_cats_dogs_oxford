@@ -98,6 +98,7 @@ def collect_annotations(x):
 
 # df2 = df['xml_dict'].apply(collect_annotations, result_type='expand')
 applied_df = df.apply(lambda row: collect_annotations(row['xml_dict']), axis='columns', result_type='expand')
+sum(applied_df['annotation'] != 0)
 
 #
 # df['image_size'] = df['xml_dict'].apply(lambda x: x['annotation']['size'] if x)

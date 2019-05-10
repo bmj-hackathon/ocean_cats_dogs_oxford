@@ -96,8 +96,8 @@ plot_indices = df.sample(NUM_IMAGES)['file name'].values
 
 for i in range(NUM_IMAGES):
     record = df.sample(1)
-    file_stem = record['file name']
-    label = '\n'.join([record['species'].values, record['breed string']])
+    file_stem = record['file name'].tolist()[0]
+    label = '\n'.join(record[['species','breed string']].values.tolist()[0])
     ax = fig.add_subplot(ROWS, COLS, i + 1)
 
     selected_image_path = list(image_folder.glob(file_stem + image_extension))
@@ -106,9 +106,9 @@ for i in range(NUM_IMAGES):
     assert selected_image_path.exists()
     img = mpl.image.imread(selected_image_path)
     ax.imshow(img)
-    ax.set_title('Test')
+    ax.set_title(file_stem)
 
-    t = ax.text(5, 25, label, color='black', alpha=1)
+    t = ax.text(10, 50, label, color='black', alpha=1)
     # t = plt.text(0.5, 0.5, 'text', transform=ax.transAxes, fontsize=30)
     t.set_bbox(dict(facecolor='white', alpha=0.7, edgecolor='none'))
     # plt.title(str_label)

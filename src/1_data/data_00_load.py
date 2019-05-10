@@ -53,8 +53,8 @@ class AIDataSet():
         logging.info("{} classes".format(len(self.df[self.col_target].value_counts())))
         logging.info("Classes counts: {}".format(list(self.df[self.col_target].value_counts().iteritems())))
 
-
         self.check_alignment(strict=False)
+
     def list_images(self):
         image_list = self.image_folder.glob("*"+self.image_extension)
         return list(image_list)
@@ -82,9 +82,10 @@ image_folder = path_data / "images"
 image_extension = '.jpg'
 ds = AIDataSet(image_folder, image_extension, df, 'file name', 'species')
 df.head()
+
 # %% Plotting
 ROWS = 3
-COLS = 3
+COLS = 5
 NUM_IMAGES = ROWS * COLS
 
 # Figure ##############################################################
@@ -97,8 +98,10 @@ plot_indices = df.sample(NUM_IMAGES)['file name'].values
 for i in range(NUM_IMAGES):
     record = df.sample(1)
     file_stem = record['file name'].tolist()[0]
-    label = '\n'.join(record[['species','breed string']].values.tolist()[0])
+    label = '\n'.join(record[['species', 'breed string']].values.tolist()[0])
     ax = fig.add_subplot(ROWS, COLS, i + 1)
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
 
     selected_image_path = list(image_folder.glob(file_stem + image_extension))
     assert len(selected_image_path) == 1
@@ -109,9 +112,7 @@ for i in range(NUM_IMAGES):
     ax.set_title(file_stem)
 
     t = ax.text(10, 50, label, color='black', alpha=1)
-    # t = plt.text(0.5, 0.5, 'text', transform=ax.transAxes, fontsize=30)
     t.set_bbox(dict(facecolor='white', alpha=0.7, edgecolor='none'))
-    # plt.title(str_label)
+
+plt.tight_layout()
 plt.show()
-
-

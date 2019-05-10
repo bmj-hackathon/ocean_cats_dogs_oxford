@@ -31,21 +31,38 @@ def split_breed(x):
 
 df['breed string'] = df['image file name'].apply(split_breed)
 
-# Define the full file path for the images
-def file_path(x, path_data, extension):
-    filename = x + extension
-    return path_data / filename
+# %%
+# Collect the paths of the data augmentations
 
-file_path_parameterized = functools.partial(file_path, path_data=path_data/'images', extension='.jpg')
-df['path_image'] = df['image file name'].apply(file_path_parameterized)
-df['path_image'][0]
+# Utilities
+def file_path(x, path_data, file_pattern):
+    filename = x + file_pattern
+    return path_data / filename
 
 def assert_path_exists(x):
     return x.exists()
-assert df['path_image'].apply(assert_path_exists).all()
+
+# Define the full file path for the images
+file_path_parameterized = functools.partial(file_path, path_data=path_data/'images', file_pattern='{}.jpg')
+df['path_image'] = df['image file name'].apply(file_path_parameterized)
+df['path_image'][0]
 
 # Define the xml path
 path_xml = path_data / 'annotations' / 'xmls'
+file_path_parameterized = functools.partial(file_path, path_data=path_xml, file_pattern='{}.xml')
+df['path_xml'] = df['image file name'].apply(file_path_parameterized)
+df['path_xml'][0]
+
+# Define the trimap path
+path_trimap = path_data / 'annotations' / 'trimaps'
+file_path_parameterized = functools.partial(file_path, path_data=path_trimap, file_pattern='._{}.png')
+df['path_trimap'] = df['image file name'].apply(file_path_parameterized)
+df['path_trimap'][0]
+
+# Check paths
+assert df['path_xml'].apply(assert_path_exists).all()
+assert df['path_image'].apply(assert_path_exists).all()
+assert df['path_xml'][0].exists()
 
 
 
